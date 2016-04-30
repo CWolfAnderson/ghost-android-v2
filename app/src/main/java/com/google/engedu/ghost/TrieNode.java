@@ -123,37 +123,43 @@ public class TrieNode {
 
         StringBuilder word = new StringBuilder(s);
         random = new Random();
-
-        int childrenSize, randomIndex;
+        int randomIndex;
         ArrayList<String> children;
-        ArrayList<String> parents;
+        ArrayList<String> potentialChildren;
         String randomLetter;
 
         while (true) {
 
-            childrenSize = current.children.keySet().size();
-            randomIndex = random.nextInt(childrenSize);
             children = new ArrayList<>(current.children.keySet());
-            parents = new ArrayList<>();
+            potentialChildren = new ArrayList<>();
 
-            for (String child : children) {
-                if (current.children.get(child).isWord) {
-                    parents.add(child);
+            for (String letter : children) {
+                if (!current.children.get(letter).isWord) {
+                    Log.d("test", "this cannot form a word: " + current.children.get(letter));
+                    potentialChildren.add(letter);
                 }
             }
 
-            if (parents.isEmpty()) {
+            if (potentialChildren.isEmpty()) {
+                Log.d("test", "potentialChildren is empty");
+                randomIndex = random.nextInt(children.size());
                 randomLetter = children.get(randomIndex);
             } else {
-                randomLetter = parents.get(randomIndex);
-            }
-
-            current = current.children.get(randomLetter);
-            word.append(randomLetter);
-
-            if (word.length() > 3 && current.isWord) {
+                randomIndex = random.nextInt(potentialChildren.size());
+                randomLetter = potentialChildren.get(randomIndex);
+                word.append(randomLetter);
+                Log.d("test", "returning " + word);
                 return word.toString();
             }
+
+            word.append(randomLetter);
+            current = current.children.get(randomLetter);
+//            word.append(randomLetter);
+
+//            if (word.length() > 3 && !current.isWord) {
+//            if (word.length() > 3) {
+//                return word.toString();
+//            }
 
         }
 

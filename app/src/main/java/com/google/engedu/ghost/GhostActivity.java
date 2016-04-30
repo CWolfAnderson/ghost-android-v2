@@ -127,7 +127,7 @@ public class GhostActivity extends ActionBarActivity {
             } else {
 
                 if (!Strings.isNullOrEmpty(fastDictionary.getAnyWordStartingWith(wordFragment))) {
-                    wordFragment = fastDictionary.getAnyWordStartingWith(wordFragment).substring(0, wordFragment.length() + 1); // gets only the first letter
+                    wordFragment = fastDictionary.getGoodWordStartingWith(wordFragment).substring(0, wordFragment.length() + 1); // gets only the first letter
                     updateGhostView();
                 } else {
                     updateStatus("There aren't any words starting with " + wordFragment + ", the computer wins!");
