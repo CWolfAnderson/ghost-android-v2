@@ -1,5 +1,7 @@
 package com.google.engedu.ghost;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,21 +19,35 @@ public class FastDictionary implements GhostDictionary {
         while((line = in.readLine()) != null) {
             String word = line.trim();
             if (word.length() >= MIN_WORD_LENGTH)
-                root.add(line.trim());
+                root.add(word);
         }
+
     }
+
     @Override
     public boolean isWord(String word) {
+
         return root.isWord(word);
     }
 
+    /* TODO
+    Re-implement getAnyWordStartingWith in the FastDictionary (we recommend delegating the work to the TrieNode class).
+     */
     @Override
     public String getAnyWordStartingWith(String prefix) {
+
         return root.getAnyWordStartingWith(prefix);
     }
 
+    /* TODO
+    Implement getGoodWordStartingWith.
+    This method should consider all the children of the current prefix and attempt to randomly pick one that is not a complete word.
+    Only if all the children of the current prefix are words should it randomly select one of those.
+    This is not an optimum computer player but should make the game quite a bit more challenging.
+     */
     @Override
     public String getGoodWordStartingWith(String prefix) {
+
         return root.getGoodWordStartingWith(prefix);
     }
 }

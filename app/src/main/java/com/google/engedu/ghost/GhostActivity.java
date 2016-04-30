@@ -25,6 +25,7 @@ public class GhostActivity extends ActionBarActivity {
     private boolean userTurn = false;
     private Random random = new Random();
     private SimpleDictionary simpleDictionary;
+    private FastDictionary fastDictionary;
     private String wordFragment = "";
 
     // State saves
@@ -42,15 +43,15 @@ public class GhostActivity extends ActionBarActivity {
         onStart(null);
 
         /*
-        Initialize the dictionary by loading the content of the file in the GhostActivity.onCreate method.
-        You can use getAssets().open to access the dictionary file as an InputStream and feed it to the     SimpleDictionary's constructor to instantiate the dictionary member.
-        We've provided the implementation of SimpleDictionary's constructor and the isWord method which is all you need for now.
+        √ Start by updating GhostActivity.onCreate to instantiate a FastDictionary instead of a SimpleDictionary and let's explore FastDictionary.
+        √ You will notice that it implements the same interface as SimpleDictionary but instead of storing each word in an ArrayList, it adds them to a TrieNode.
+        Your next challenge is to implement the add and isWord methods of the TrieNode class.
          */
 
         AssetManager assetManager = getAssets();
         try {
             InputStream inputStream = assetManager.open("words.txt");
-            simpleDictionary = new SimpleDictionary(inputStream);
+            fastDictionary = new FastDictionary(inputStream);
         } catch (IOException e) {
             Toast toast = Toast.makeText(this, "Could not load dictionary", Toast.LENGTH_LONG);
             toast.show();
@@ -111,21 +112,22 @@ public class GhostActivity extends ActionBarActivity {
             wordFragment = String.valueOf(letter);
             updateGhostView();
             updateStatus(USER_TURN);
+
         } else {
 
-            if (wordFragment.length() >= 4 && simpleDictionary.isWord(wordFragment)) {
-                // Log.d("test", "Word is >= 4 && is a word!");
+            if (wordFragment.length() >= 4 && fastDictionary.isWord(wordFragment)) {
                 updateStatus(wordFragment + " is a word, the computer wins!");
                 disableChallengeButton();
-            } else if (!simpleDictionary.isWord(simpleDictionary.getAnyWordStartingWith(wordFragment))) {
+            } else if (fastDictionary.getAnyWordStartingWith(wordFragment) == null) {
                 updateStatus(wordFragment + " cannot form a word, the computer wins!");
                 disableChallengeButton();
+//            } else if (!fastDictionary.isWord(fastDictionary.getAnyWordStartingWith(wordFragment))) {
+//                updateStatus(wordFragment + " cannot form a word, the computer wins!");
+//                disableChallengeButton();
             } else {
 
-                Log.d("test", "wordFragment in computerTurn: " + wordFragment);
-
-                if (!Strings.isNullOrEmpty(simpleDictionary.getAnyWordStartingWith(wordFragment))) {
-                    wordFragment = simpleDictionary.getAnyWordStartingWith(wordFragment).substring(0, wordFragment.length() + 1); // gets only the first letter
+                if (!Strings.isNullOrEmpty(fastDictionary.getAnyWordStartingWith(wordFragment))) {
+                    wordFragment = fastDictionary.getAnyWordStartingWith(wordFragment).substring(0, wordFragment.length() + 1); // gets only the first letter
                     updateGhostView();
                 } else {
                     updateStatus("There aren't any words starting with " + wordFragment + ", the computer wins!");
@@ -141,6 +143,7 @@ public class GhostActivity extends ActionBarActivity {
         }
 
     }
+
     /*
     √ Handler for the "Reset" button.
     √ Randomly determines whether the game starts with a user turn or a computer turn.
@@ -180,8 +183,6 @@ public class GhostActivity extends ActionBarActivity {
             updateGhostView();
         }
 
-        Log.d("is_word", simpleDictionary.isWord(wordFragment) + "");
-
         userTurn = false;
 
         computerTurn();
@@ -220,12 +221,12 @@ public class GhostActivity extends ActionBarActivity {
 
         if (wordFragment.length() < 4) {
             updateStatus("There must be at least 4 characters to challenge.");
-        } else if (wordFragment.length() >= 4 && simpleDictionary.isWord(wordFragment)) {
+        } else if (wordFragment.length() >= 4 && fastDictionary.isWord(wordFragment)) {
             // Log.d("test", "Word is >= 4 && is a word!");
             updateStatus(wordFragment + " is a word, you win!");
             disableChallengeButton();
         } else {
-            String tempWord = simpleDictionary.getAnyWordStartingWith(wordFragment);
+            String tempWord = fastDictionary.getAnyWordStartingWith(wordFragment);
             // Log.d("test", "word plus 1: " + tempWord);
             if (tempWord.length() > wordFragment.length()) {
                 updateStatus(tempWord + " can be created from " + wordFragment + ", you lose!");
