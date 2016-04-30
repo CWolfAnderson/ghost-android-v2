@@ -59,9 +59,6 @@ public class TrieNode {
         TrieNode current = this;
         String currentLetter;
 
-        // HACK:
-        if (s.contains("nop")) return false;
-
         for (int i = 0; i < s.length(); i++) {
 
             currentLetter = Character.toString(s.charAt(i));

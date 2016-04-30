@@ -222,15 +222,12 @@ public class GhostActivity extends ActionBarActivity {
         if (wordFragment.length() < 4) {
             updateStatus("There must be at least 4 characters to challenge.");
         } else if (wordFragment.length() >= 4 && fastDictionary.isWord(wordFragment)) {
-            // Log.d("test", "Word is >= 4 && is a word!");
             updateStatus(wordFragment + " is a word, you win!");
             disableChallengeButton();
         } else {
             String tempWord = fastDictionary.getAnyWordStartingWith(wordFragment);
-            // Log.d("test", "word plus 1: " + tempWord);
             if (tempWord == null) {
                 updateStatus(wordFragment + " is not a word, you win!");
-                Log.d("jon", "tempWord: " + tempWord);
             } else if (tempWord.length() > wordFragment.length()) {
                 updateStatus(tempWord + " can be created from " + wordFragment + ", you lose!");
             } else {
