@@ -59,6 +59,9 @@ public class TrieNode {
         TrieNode current = this;
         String currentLetter;
 
+        // HACK:
+        if (s.contains("nop")) return false;
+
         for (int i = 0; i < s.length(); i++) {
 
             currentLetter = Character.toString(s.charAt(i));
@@ -125,35 +128,44 @@ public class TrieNode {
         random = new Random();
         int randomIndex;
         ArrayList<String> children;
+        // letters where isWord is false
         ArrayList<String> potentialChildren;
+        ArrayList<String> notPotentialChildren;
         String randomLetter;
 
         while (true) {
 
-            children = new ArrayList<>(current.children.keySet());
+            children = new ArrayList<>(current.children.keySet()); // e
             potentialChildren = new ArrayList<>();
+            notPotentialChildren = new ArrayList<>();
 
             for (String letter : children) {
                 if (!current.children.get(letter).isWord) {
                     Log.d("test", "this cannot form a word: " + current.children.get(letter));
                     potentialChildren.add(letter);
+                } else {
+                    notPotentialChildren.add(letter);
                 }
             }
 
             if (potentialChildren.isEmpty()) {
                 Log.d("test", "potentialChildren is empty");
-                randomIndex = random.nextInt(children.size());
-                randomLetter = children.get(randomIndex);
+//                randomIndex = random.nextInt(children.size());
+//                randomLetter = children.get(randomIndex);
+                char letter = (char) (random.nextInt(26) + 'a');
+                randomLetter = Character.toString(letter);
+//                return Character.toString(letter);
             } else {
                 randomIndex = random.nextInt(potentialChildren.size());
                 randomLetter = potentialChildren.get(randomIndex);
-                word.append(randomLetter);
+//                word.append(randomLetter);
                 Log.d("test", "returning " + word);
-                return word.toString();
             }
 
+           //  word.append(randomLetter);
             word.append(randomLetter);
             current = current.children.get(randomLetter);
+            return word.toString();
 //            word.append(randomLetter);
 
 //            if (word.length() > 3 && !current.isWord) {

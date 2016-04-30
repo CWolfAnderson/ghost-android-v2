@@ -228,7 +228,10 @@ public class GhostActivity extends ActionBarActivity {
         } else {
             String tempWord = fastDictionary.getAnyWordStartingWith(wordFragment);
             // Log.d("test", "word plus 1: " + tempWord);
-            if (tempWord.length() > wordFragment.length()) {
+            if (tempWord == null) {
+                updateStatus(wordFragment + " is not a word, you win!");
+                Log.d("jon", "tempWord: " + tempWord);
+            } else if (tempWord.length() > wordFragment.length()) {
                 updateStatus(tempWord + " can be created from " + wordFragment + ", you lose!");
             } else {
                 updateStatus(wordFragment + " cannot be extended, you win!");
